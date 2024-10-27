@@ -5,6 +5,22 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@atcute/bluesky@npm:^1.0.6":
+  version: 1.0.7
+  resolution: "@atcute/bluesky@npm:1.0.7"
+  peerDependencies:
+    "@atcute/client": ^1.0.0 || ^2.0.0
+  checksum: 10c0/31d0953163e88e119db857a46d53618d28983fb60c0e72685094dfc4969355542aa2a52b664135027e4f2dd94c26891752c87bbd52a43bb25dba236a2b675f8b
+  languageName: node
+  linkType: hard
+
+"@atcute/client@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@atcute/client@npm:2.0.3"
+  checksum: 10c0/7c012fa50714378fd6e68181a57671375a0391c5cd6b0b0f340a8f08a411a27373da0f7da9fd2dd0f1f92cf57fbb3529ae0b22d484f24c4ce7ec7779e6358d55
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -48,6 +64,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@skyware/jetstream@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@skyware/jetstream@npm:0.2.0"
+  dependencies:
+    "@atcute/bluesky": "npm:^1.0.6"
+    partysocket: "npm:^1.0.2"
+  checksum: 10c0/70bd61cc92ad2d10a72d7335e89c4d80d04d76e8f4b9299524e09278778006ea438bf0325e6a9e3f70960be40efcd196fe57823505d5008489bb479247a459ce
+  languageName: node
+  linkType: hard
+
 "@tsconfig/node22@npm:^22.0.0":
   version: 22.0.0
   resolution: "@tsconfig/node22@npm:22.0.0"
@@ -70,15 +96,6 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.19.2"
   checksum: 10c0/b445daa7eecd761ad4d778b882d6ff7bcc3b4baad2086ea9804db7c5d4a4ab0298b00d7f5315fc640a73b5a1d52bbf9628e09c9fec0cf44dbf9b4df674a8717d
-  languageName: node
-  linkType: hard
-
-"@types/ws@npm:^8.5.12":
-  version: 8.5.12
-  resolution: "@types/ws@npm:8.5.12"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10c0/3fd77c9e4e05c24ce42bfc7647f7506b08c40a40fe2aea236ef6d4e96fc7cb4006a81ed1b28ec9c457e177a74a72924f4768b7b4652680b42dfd52bc380e15f9
   languageName: node
   linkType: hard
 
@@ -196,12 +213,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bsky-handle-monitor@workspace:."
   dependencies:
+    "@atcute/client": "npm:^2.0.3"
+    "@skyware/jetstream": "npm:^0.2.0"
     "@tsconfig/node22": "npm:^22.0.0"
     "@types/better-sqlite3": "npm:^7.6.11"
-    "@types/ws": "npm:^8.5.12"
     better-sqlite3: "npm:^11.2.1"
     typescript: "npm:^5.5.4"
-    ws: "npm:^8.18.0"
   languageName: unknown
   linkType: soft
 
@@ -368,6 +385,13 @@ __metadata:
   version: 2.0.3
   resolution: "err-code@npm:2.0.3"
   checksum: 10c0/b642f7b4dd4a376e954947550a3065a9ece6733ab8e51ad80db727aaae0817c2e99b02a97a3d6cecc648a97848305e728289cf312d09af395403a90c9d4d8a66
+  languageName: node
+  linkType: hard
+
+"event-target-shim@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "event-target-shim@npm:6.0.2"
+  checksum: 10c0/e40b89effb1bd0fdd44dd198e3b61669c2bff89b680a8156c50480b5df8d4364208d1db09fbe823211005651558415691cb3ff72c22618eb154e55282b8b0481
   languageName: node
   linkType: hard
 
@@ -822,6 +846,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"partysocket@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "partysocket@npm:1.0.2"
+  dependencies:
+    event-target-shim: "npm:^6.0.2"
+  checksum: 10c0/19b00799cc7d09d078a7a5038d17d8455bfb43fdefde82c08dd84dae6e724b78a51c96758cda79bc963fb7842b9d7da1284cda4e078d89debb99dc9a54c81015
+  languageName: node
+  linkType: hard
+
 "path-key@npm:^3.1.0":
   version: 3.1.1
   resolution: "path-key@npm:3.1.1"
@@ -1232,21 +1265,6 @@ __metadata:
   version: 1.0.2
   resolution: "wrappy@npm:1.0.2"
   checksum: 10c0/56fece1a4018c6a6c8e28fbc88c87e0fbf4ea8fd64fc6c63b18f4acc4bd13e0ad2515189786dd2c30d3eec9663d70f4ecf699330002f8ccb547e4a18231fc9f0
-  languageName: node
-  linkType: hard
-
-"ws@npm:^8.18.0":
-  version: 8.18.0
-  resolution: "ws@npm:8.18.0"
-  peerDependencies:
-    bufferutil: ^4.0.1
-    utf-8-validate: ">=5.0.2"
-  peerDependenciesMeta:
-    bufferutil:
-      optional: true
-    utf-8-validate:
-      optional: true
-  checksum: 10c0/25eb33aff17edcb90721ed6b0eb250976328533ad3cd1a28a274bd263682e7296a6591ff1436d6cbc50fa67463158b062f9d1122013b361cec99a05f84680e06
   languageName: node
   linkType: hard
 
