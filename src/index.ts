@@ -1,4 +1,5 @@
 import * as WS from "ws";
+import Database from "better-sqlite3";
 
 /////////////////////////////////////////////////
 enum CommitType {
@@ -67,10 +68,12 @@ class JetStreamClient {
     #ws: WS.WebSocket | undefined;
     #reconnectMs: number;
     onmessage: (msg: Message) => void;
+    cursor: number;
 
     constructor(url: string, onmessage: (msg: Message) => void) {
         this.url = url;
         this.onmessage = onmessage;
+        this.cursor = 0;
         this.#reconnectMs = 1000;
         this.#connect();
     }
@@ -106,6 +109,7 @@ class JetStreamClient {
                 if (msg === undefined) {
                     return;
                 }
+                this.cursor = msg.time_us;
                 this.onmessage(msg);
             } catch (error) {
                 console.log(`Message error: ${error}`);
@@ -122,7 +126,24 @@ class JetStreamClient {
             console.log(`error: ${error}`);
         });
     }
+
+    getExpectedCursor() {
+        return Date.now() * 1000; // microseconds
+    }
+
+    reconnect() {
+        this.#ws?.close();
+    }
 }
+
+////////////////////////////
+
+const db = new Database('handles.db');
+db.pragma('journal_mode = WAL');
+
+db.exec("CREATE TABLE IF NOT EXISTS handles (id INTEGER PRIMARY KEY, did TEXT UNIQUE, handle TEXT)");
+
+const saveIdentityStmt = db.prepare("INSERT INTO handles (did, handle) VALUES (@did, @handle) ON CONFLICT (did) DO UPDATE SET handle = @handle");
 
 let messageCount = 0;
 let idCount = 0;
@@ -136,6 +157,7 @@ function processMsg(msg: Message) {
                 !msg.identity.handle.endsWith(".brid.gy")) {
                 console.log(msg.identity.handle);
             }
+            saveIdentityStmt.run({did: msg.did, handle: msg.identity.handle});
             break;
         case MessageType.Commit:
             //console.log(msg);
@@ -163,11 +185,20 @@ function processMsg(msg: Message) {
     }
 }
 
-const client = new JetStreamClient(`wss://jetstream.atproto.tools/subscribe?wantedCollections=app.bsky.none`, processMsg);
+const client = new JetStreamClient(`wss://jetstream1.us-west.bsky.network/subscribe?wantedCollections=app.bsky.none`, processMsg);
+const queryStatsStmt = db.prepare('SELECT COUNT(*) AS c FROM handles');
 
 let lastMessageCount = 0;
+const statsInterval = 10;
 setInterval(() => {
-    let mps = ((messageCount - lastMessageCount) / 60).toFixed(2);
-    console.log(`Received ${messageCount} messages (${idCount} identity). ${mps} messages per second`);
+    let stats = queryStatsStmt.get() as {c: number};
+    let mps = ((messageCount - lastMessageCount) / statsInterval).toFixed(2);
+    let expectedCursor = client.getExpectedCursor();
+    let cursorSecondsBehind = ((expectedCursor - client.cursor) / 1000000);
+    console.log(`Received ${messageCount} messages (${idCount} identity). ${mps} m/s. Saved ${stats.c} rows. Cursor is ${cursorSecondsBehind.toFixed(2)} seconds behind.`);
+    if (lastMessageCount == messageCount && cursorSecondsBehind > 120) {
+        console.log(`Connection appears stalled. Reconnecting...`);
+        client.reconnect();
+    }
     lastMessageCount = messageCount;
-}, 60000);
+}, statsInterval * 1000);

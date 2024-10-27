@@ -3,6 +3,7 @@
   "packageManager": "yarn@4.4.1",
   "dependencies": {
     "@types/ws": "^8.5.12",
+    "better-sqlite3": "^11.2.1",
     "typescript": "^5.5.4",
     "ws": "^8.18.0"
   },
@@ -10,6 +11,7 @@
     "listen": "tsc&&node dist/index.js"
   },
   "devDependencies": {
-    "@tsconfig/node22": "^22.0.0"
+    "@tsconfig/node22": "^22.0.0",
+    "@types/better-sqlite3": "^7.6.11"
   }
 }
