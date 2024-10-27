@@ -6,6 +6,7 @@ COPY package.json /
 COPY tsconfig.json /
 COPY yarn.lock /
 
+RUN yarn install
 RUN tsc
 
 ENTRYPOINT ["node /dist/index.js"]
