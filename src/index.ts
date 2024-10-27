@@ -1,7 +1,13 @@
 import { Jetstream } from "@skyware/jetstream";
 import Database from "better-sqlite3";
+import { parseArgs } from 'node:util';
 
-const db = new Database('handles.db');
+const options = {
+  'db': { type: 'string' }
+} as const;
+const { values } = parseArgs({ options });
+
+const db = new Database(values.db);
 db.pragma('journal_mode = WAL');
 
 db.exec("CREATE TABLE IF NOT EXISTS handles (id INTEGER PRIMARY KEY, did TEXT UNIQUE, handle TEXT)");

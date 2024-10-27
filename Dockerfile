@@ -12,4 +12,4 @@ RUN yarn install
 COPY src/ ./src/
 RUN tsc
 
-ENTRYPOINT ["node /dist/index.js"]
+ENTRYPOINT ["node /app/dist/index.js --db /app/data/handles.db"]
